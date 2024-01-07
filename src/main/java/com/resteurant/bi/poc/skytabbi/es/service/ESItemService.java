@@ -4,7 +4,6 @@ import com.resteurant.bi.poc.skytabbi.es.repository.ItemRepository;
 import com.resteurant.bi.poc.skytabbi.model.Item.Item;
 import com.resteurant.bi.poc.skytabbi.service.ItemService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.elasticsearch.client.elc.ElasticsearchTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -15,8 +14,6 @@ import java.util.List;
 public class ESItemService implements ItemService {
 
     private final ItemRepository itemRepository;
-
-    private final ElasticsearchTemplate esTemplate;
 
     @Override
     public List<Item> getAll() {

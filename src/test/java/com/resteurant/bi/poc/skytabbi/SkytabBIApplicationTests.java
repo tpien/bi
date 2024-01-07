@@ -15,11 +15,10 @@ import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @Testcontainers
 @ExtendWith(SpringExtension.class)
@@ -53,7 +52,7 @@ class SkytabBIApplicationTests {
 				.amountGross(new BigDecimal(100))
 				.tax(new BigDecimal(20))
 				.employee("Robert Smith")
-				.saleDate(LocalDateTime.now().minusDays(3).toString())
+				.saleDate(new Date())
 				.build();
 
 
@@ -77,7 +76,7 @@ class SkytabBIApplicationTests {
 				.amountGross(new BigDecimal(100))
 				.tax(new BigDecimal(20))
 				.employee("Robert Smith")
-				.saleDate(LocalDateTime.now().minusDays(3).toString())
+				.saleDate(new Date())
 				.build());
 
 		itemService.create(Item.builder()
@@ -86,7 +85,7 @@ class SkytabBIApplicationTests {
 				.amountGross(new BigDecimal(170))
 				.tax(new BigDecimal(20))
 				.employee("Andrew Ford")
-				.saleDate(LocalDateTime.now().minusDays(4).toString())
+				.saleDate(new Date())
 				.build());
 
 		List<Item> books = itemService.getAll();

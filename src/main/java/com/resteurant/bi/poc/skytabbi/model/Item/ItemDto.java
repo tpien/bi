@@ -5,13 +5,14 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
+import java.util.Date;
 
 @Data
 @NoArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
 public class ItemDto {
 
-    String saleDate;
+    Date saleDate;
     private BigDecimal amount;
     private BigDecimal amountGross;
     private BigDecimal tax;

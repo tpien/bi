@@ -22,6 +22,10 @@ public class CompanyController {
     private final ItemService itemService;
     private final ItemMapper itemMapper;
 
+    // powinien przyjść request z parametrami. np. byPlaces, byEmployee -> grouping
+    //fromDate, toDate, groupBy("person, place, ")
+
+
     @ResponseStatus(HttpStatus.OK)
     @GetMapping
     public List<Item> getAllSales() {
