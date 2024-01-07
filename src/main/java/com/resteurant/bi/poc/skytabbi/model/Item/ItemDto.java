@@ -22,12 +22,13 @@ public class ItemDto {
     private String place;
 
     public static Item transform(ItemDto itemDto) {
-        Item item = new Item();
-        item.setAmount(itemDto.getAmount());
-        item.setEmployee(itemDto.getEmployee());
-        item.setPlace(itemDto.getPlace());
-        item.setTax(itemDto.getTax());
-        item.setSaleDate(itemDto.getSaleDate());
+        Item item = Item.builder()
+                .amount(itemDto.getAmount())
+                .employee(itemDto.getEmployee())
+                .place(itemDto.getPlace())
+                .tax(itemDto.getTax())
+                .saleDate(itemDto.getSaleDate())
+                .build();
         return item;
     }
 }

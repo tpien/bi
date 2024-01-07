@@ -15,6 +15,10 @@ repositories {
     mavenCentral()
 }
 
+ext {
+    testcontainersVersion = '1.19.3'
+}
+
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-data-elasticsearch'
     implementation 'org.springframework.boot:spring-boot-starter-web'
@@ -31,8 +35,29 @@ dependencies {
     implementation 'javax.validation:validation-api:2.0.1.Final'
     implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.1.0'
 
+    testImplementation "org.testcontainers:testcontainers:${testcontainersVersion}"
+    testImplementation "org.testcontainers:junit-jupiter:${testcontainersVersion}"
+    testImplementation "org.testcontainers:elasticsearch:${testcontainersVersion}"
+
     }
 
 tasks.named('test') {
     useJUnitPlatform()
 }
+
+task integrationTest(type: Test) {
+    description = 'Runs integration tests'
+    group = 'verification'
+    testClassesDirs = sourceSets.test.output.classesDirs
+    classpath = sourceSets.test.runtimeClasspath
+    shouldRunAfter test
+}
+
+task integrationTestReport(type: Test) {
+    description = 'Generates integration test report'
+    group = 'reporting'
+    testClassesDirs = sourceSets.test.output.classesDirs
+    classpath = sourceSets.test.runtimeClasspath
+    mustRunAfter integrationTest
+}
+check.dependsOn integrationTest
