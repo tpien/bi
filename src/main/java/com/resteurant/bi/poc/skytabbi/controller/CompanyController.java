@@ -1,6 +1,7 @@
 package com.resteurant.bi.poc.skytabbi.controller;
 
 
+import com.resteurant.bi.poc.skytabbi.loader.ItemGenerator;
 import com.resteurant.bi.poc.skytabbi.model.Item.Item;
 import com.resteurant.bi.poc.skytabbi.model.Item.ItemDto;
 import com.resteurant.bi.poc.skytabbi.model.Item.ItemMapper;
@@ -10,6 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -20,16 +22,23 @@ import java.util.List;
 @RequestMapping("/v1/company")
 public class CompanyController {
     private final ItemService itemService;
+    private final ItemGenerator itemGenerator;
     private final ItemMapper itemMapper;
-
-    // powinien przyjść request z parametrami. np. byPlaces, byEmployee -> grouping
-    //fromDate, toDate, groupBy("person, place, ")
-
 
     @ResponseStatus(HttpStatus.OK)
     @GetMapping
     public List<Item> getAllSales() {
         return itemService.getAll();
+    }
+
+    @ResponseStatus(HttpStatus.OK)
+    @GetMapping("/generate")
+    public List<Item> genereateItems() {
+        LocalDateTime startDate = LocalDateTime.of(2023, 11, 30, 10, 0, 0);
+        LocalDateTime endDate = LocalDateTime.of(2024, 1, 10, 11, 0, 0);
+        itemGenerator.generateData(5,10, startDate,endDate);
+        return itemService.getAll();
+
     }
 
     @ResponseStatus(HttpStatus.ACCEPTED)

@@ -1,5 +1,6 @@
 package com.resteurant.bi.poc.skytabbi;
 
+import com.resteurant.bi.poc.skytabbi.loader.ItemGenerator;
 import com.resteurant.bi.poc.skytabbi.model.Item.Item;
 import com.resteurant.bi.poc.skytabbi.service.ItemService;
 import org.junit.jupiter.api.BeforeAll;
@@ -15,6 +16,7 @@ import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 
@@ -26,6 +28,9 @@ import static org.junit.jupiter.api.Assertions.*;
 class SkytabBIApplicationTests {
 	@Autowired
 	private ItemService itemService;
+
+	@Autowired
+	private ItemGenerator itemGenerator;
 
 	@Autowired
 	private ElasticsearchTemplate template;
@@ -45,7 +50,20 @@ class SkytabBIApplicationTests {
 	}
 
 	@Test
-	void testCreateBook() {
+	void testItemsGenerator() {
+		LocalDateTime startDate = LocalDateTime.of(2023, 12, 30, 10, 0, 0);
+		LocalDateTime endDate = LocalDateTime.of(2024, 1, 30, 11, 0, 0);
+		int itemsCount = 10;
+		itemGenerator.generateData(5,itemsCount, startDate,endDate);
+
+		List<Item> items = itemService.getAll();
+		assertNotNull(items);
+		assertEquals(itemsCount, items.size());
+
+	}
+
+	@Test
+	void testCreateItem() {
 		final Item item = Item.builder()
 				.place("California")
 				.amount(new BigDecimal(100))
@@ -69,14 +87,13 @@ class SkytabBIApplicationTests {
 
 	@Test
 	void testGetAllItems(){
-
 		itemService.create(Item.builder()
 				.place("California")
 				.amount(new BigDecimal(100))
 				.amountGross(new BigDecimal(100))
 				.tax(new BigDecimal(20))
 				.employee("Robert Smith")
-				.saleDate(new Date())
+				.saleDate(ItemGenerator.fromStringToDate("2023-12-30T11:55:14"))
 				.build());
 
 		itemService.create(Item.builder()
@@ -85,16 +102,13 @@ class SkytabBIApplicationTests {
 				.amountGross(new BigDecimal(170))
 				.tax(new BigDecimal(20))
 				.employee("Andrew Ford")
-				.saleDate(new Date())
+				.saleDate(ItemGenerator.fromStringToDate("2023-11-30T16:55:14"))
 				.build());
 
-		List<Item> books = itemService.getAll();
-
-		assertNotNull(books);
-		assertEquals(2, books.size());
+		List<Item> items = itemService.getAll();
+		assertNotNull(items);
+		assertEquals(2, items.size());
 	}
-
-
 
 	@Test
 	void reloadIndexesLoads() {
@@ -103,5 +117,4 @@ class SkytabBIApplicationTests {
 			template.indexOps(Item.class).create();
 		}
 	}
-
 }
