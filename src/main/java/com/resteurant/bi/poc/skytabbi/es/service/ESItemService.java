@@ -1,26 +1,22 @@
 package com.resteurant.bi.poc.skytabbi.es.service;
 
-import co.elastic.clients.elasticsearch._types.aggregations.Aggregation;
-import co.elastic.clients.elasticsearch._types.aggregations.AggregationBuilders;
-import co.elastic.clients.elasticsearch._types.aggregations.Buckets;
-import co.elastic.clients.elasticsearch._types.aggregations.StringTermsBucket;
 import com.resteurant.bi.poc.skytabbi.es.repository.ItemRepository;
 import com.resteurant.bi.poc.skytabbi.es.repository.PlaceRevenueRepository;
 import com.resteurant.bi.poc.skytabbi.model.Item.Item;
+import com.resteurant.bi.poc.skytabbi.model.revenue.PlaceRevenue;
 import com.resteurant.bi.poc.skytabbi.service.ItemService;
+import io.searchbox.client.JestClient;
+import io.searchbox.core.Search;
+import io.searchbox.core.SearchResult;
+import io.searchbox.params.Parameters;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.elasticsearch.client.elc.ElasticsearchAggregation;
-import org.springframework.data.elasticsearch.client.elc.ElasticsearchAggregations;
-import org.springframework.data.elasticsearch.client.elc.ElasticsearchTemplate;
-import org.springframework.data.elasticsearch.client.elc.NativeQuery;
-import org.springframework.data.elasticsearch.core.SearchHits;
-import org.springframework.data.elasticsearch.core.query.Query;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -29,34 +25,7 @@ public class ESItemService implements ItemService {
     private final ItemRepository itemRepository;
     private final PlaceRevenueRepository placeRevenueRepository;
 
-    @Autowired
-    private ElasticsearchTemplate elasticsearchRestTemplate;
-
-
-    @Override
-    public List<Item> getRevenuePlaces() {
-        Aggregation aggregation = AggregationBuilders.terms(ta -> ta.field("place").size(10000));
-        Query query = NativeQuery.builder()
-                .withMaxResults(0)
-                .withQuery(q -> q.matchAll(ma -> ma))
-                .withAggregation("distinct_place", aggregation)
-                .build();
-
-
-        SearchHits<Item> searchHits = elasticsearchRestTemplate.search(query, Item.class);
-
-        ElasticsearchAggregations aggregations = (ElasticsearchAggregations) searchHits.getAggregations();
-        List<ElasticsearchAggregation> aggregationsList = aggregations.aggregations();
-
-        Buckets<StringTermsBucket> buckets = aggregationsList.get(0).aggregation().getAggregate().sterms().buckets();
-
-        List<String> brandList = buckets.array().stream().map(bucket -> bucket.key().stringValue()).collect(Collectors.toList());
-        brandList.stream().forEach(f -> System.out.println(f));
-
-
-        List<Item> items = placeRevenueRepository.executeQuery();
-        return items;
-    }
+    private final JestClient jestClient;
 
     @Override
     public List<Item> getAll() {
@@ -69,4 +38,78 @@ public class ESItemService implements ItemService {
         return itemRepository.save(Item);
     }
 
+
+    final static String QUERY_GET_PLACES_REVENUE = """
+            {
+                 "size": 0,
+                 "query": {
+                     "bool": {
+                         "filter": {
+                             "range": {
+                                 "saleDate": {
+                                     "gte": ":fromSaleDate",
+                                     "lte": ":toSaleDate"
+                                 }
+                             }
+                         }
+                     }
+                 },
+                 "aggs": {
+                     "places": {
+                         "terms": {
+                             "field": "place.keyword"
+                         },
+                         "aggs": {
+                             "total_amount": {
+                                 "sum": {
+                                     "field": "amount"
+                                 }
+                             },
+                             "total_amountGross": {
+                                 "sum": {
+                                     "field": "amountGross"
+                                 }
+                             }
+                         }
+                     }
+                 }
+             }
+            """;
+
+    public List<PlaceRevenue> getRevenuePlaces(LocalDateTime from, LocalDateTime to) {
+        List<PlaceRevenue> placeRevenuesResult = new ArrayList<>();
+        String fromEpoch = String.valueOf(from.toInstant(ZoneOffset.UTC).toEpochMilli());
+        String toEpoch = String.valueOf(to.toInstant(ZoneOffset.UTC).toEpochMilli());
+
+        String query = QUERY_GET_PLACES_REVENUE.replace(":fromSaleDate", fromEpoch)
+                .replace(":toSaleDate", toEpoch);
+
+        Search search = new Search.Builder(query)
+                .addIndex("item")
+                .setParameter(Parameters.SIZE, 0)
+                .build();
+        try {
+            SearchResult result = jestClient.execute(search);
+            if (result.isSucceeded()) {
+                io.searchbox.core.search.aggregation.TermsAggregation placesAgg = result.getAggregations().getTermsAggregation("places");
+                for (io.searchbox.core.search.aggregation.TermsAggregation.Entry entry : placesAgg.getBuckets()) {
+                    String place = entry.getKey();
+                    Double totalAmount = entry.getSumAggregation("total_amount").getSum();
+                    Double totalAmountGross = entry.getSumAggregation("total_amountGross").getSum();
+                    placeRevenuesResult.add(PlaceRevenue.builder()
+                            .name(place)
+                            .totalAmount(totalAmount)
+                            .totalAmountGross(totalAmountGross)
+                            .build()
+                    );
+                }
+            } else {
+                System.err.println("Elasticsearch request failed: " + result.getErrorMessage());
+            }
+
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        return placeRevenuesResult;
+    }
 }

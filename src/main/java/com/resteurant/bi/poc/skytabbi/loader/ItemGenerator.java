@@ -11,7 +11,10 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
 
 @Service
@@ -21,7 +24,7 @@ public class ItemGenerator {
     @Autowired
     private ItemService itemService;
 
-    public void generateData(int maxPlaces, int itemsAmount, LocalDateTime startDate, LocalDateTime endDate) {
+    public void generateData(int maxPlaces, Integer itemsAmount, LocalDateTime startDate, LocalDateTime endDate) {
 
         BigDecimal[] taxRates = {
                 BigDecimal.valueOf(1.05), // 5%
@@ -58,8 +61,6 @@ public class ItemGenerator {
                     .build());
         }
     }
-
-
 
 
 
