@@ -23,8 +23,6 @@ import java.util.List;
 public class ESItemService implements ItemService {
 
     private final ItemRepository itemRepository;
-    private final PlaceRevenueRepository placeRevenueRepository;
-
     private final JestClient jestClient;
 
     @Override

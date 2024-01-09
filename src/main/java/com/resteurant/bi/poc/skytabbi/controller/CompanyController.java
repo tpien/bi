@@ -48,7 +48,7 @@ public class CompanyController {
     @ResponseStatus(HttpStatus.OK)
     @GetMapping("/generate/{itemsAmount}")
     public void genereateItems(@PathVariable Integer itemsAmount) {
-        LocalDateTime startDate = LocalDateTime.of(2022, 01, 30, 10, 0, 0);
+        LocalDateTime startDate = LocalDateTime.of(2022, 1, 30, 10, 0, 0);
         LocalDateTime endDate = LocalDateTime.of(2024, 1, 10, 11, 0, 0);
         itemGenerator.generateData(10, itemsAmount, startDate, endDate);
     }
