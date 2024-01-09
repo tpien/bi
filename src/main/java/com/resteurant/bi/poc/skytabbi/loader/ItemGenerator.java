@@ -29,11 +29,11 @@ public class ItemGenerator {
                 BigDecimal.valueOf(1.23)  // 23%
         };
 
-        List<String> places = new ArrayList<String>();
+        List<String> places = new ArrayList<>();
         for (int i = 0; i < maxPlaces; i++)
             places.add(Faker.instance().address().cityName());
 
-        List<String> dishes = new ArrayList<String>();
+        List<String> dishes = new ArrayList<>();
         for (int i = 0; i < 10; i++)
             dishes.add(Faker.instance().food().dish());
 
@@ -58,6 +58,10 @@ public class ItemGenerator {
                     .build());
         }
     }
+
+
+
+
 
     public static Date fromStringToDate(String inDate) {
         LocalDateTime dateDateTime = LocalDateTime.parse(inDate);
