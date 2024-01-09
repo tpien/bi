@@ -1,7 +1,6 @@
 package com.resteurant.bi.poc.skytabbi.es.service;
 
 import com.resteurant.bi.poc.skytabbi.es.repository.ItemRepository;
-import com.resteurant.bi.poc.skytabbi.es.repository.PlaceRevenueRepository;
 import com.resteurant.bi.poc.skytabbi.model.Item.Item;
 import com.resteurant.bi.poc.skytabbi.model.revenue.PlaceRevenue;
 import com.resteurant.bi.poc.skytabbi.service.ItemService;
@@ -10,6 +9,8 @@ import io.searchbox.core.Search;
 import io.searchbox.core.SearchResult;
 import io.searchbox.params.Parameters;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -21,6 +22,8 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class ESItemService implements ItemService {
+
+    Logger logger = LoggerFactory.getLogger(ESItemService.class);
 
     private final ItemRepository itemRepository;
     private final JestClient jestClient;
@@ -102,7 +105,7 @@ public class ESItemService implements ItemService {
                     );
                 }
             } else {
-                System.err.println("Elasticsearch request failed: " + result.getErrorMessage());
+                logger.error("Elasticsearch request failed: " + result.getErrorMessage());
             }
 
         } catch (IOException e) {

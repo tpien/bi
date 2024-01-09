@@ -44,6 +44,7 @@ dependencies {
     testImplementation "org.testcontainers:junit-jupiter:${testcontainersVersion}"
     testImplementation "org.testcontainers:elasticsearch:${testcontainersVersion}"
 
+    implementation 'ch.qos.logback:logback-core:1.4.14'
 
     }
 
