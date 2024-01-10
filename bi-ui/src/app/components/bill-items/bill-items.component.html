@@ -24,7 +24,7 @@
     <td>{{ item.name }}</td>
     <td>{{ item.amount | number:'1.2-2' }} $</td>
     <td>{{ item.amountGross | number:'1.2-2' }} $</td>
-    <td>{{ item.tax | number:'1.2-2' }} %</td>
+    <td>{{ item.tax * 100 - 100}}%</td>
     <td>{{ item.employee}}</td>
     <td>{{ item.saleDate | date:'dd.MM.yyyy HH:mm' }}</td>
   </tr>
