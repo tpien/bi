@@ -1,7 +1,5 @@
 <div style="width: 70%; margin:auto; margin-top:100px;">
-
   <div class="container">
-
     <div class="row mt-1">
       <label class="col-1 col-form-label">Period</label>
       <div class="col-4">
@@ -54,7 +52,8 @@
       <td>{{ place.totalAmount| number:'1.2-2' }} $</td>
       <td>{{ place.totalAmountGross| number:'1.2-2' }} $</td>
       <td>{{ place.count }}</td>
-      <td></td>
+      <td><a (click)="router.navigate(['billItems/'+place.name + '/'+searchFrom + '/'+searchTo]);" style="cursor: pointer">
+        <i class="material-icons">chevron_right</i></a></td>
     </tbody>
   </table>
 </div>

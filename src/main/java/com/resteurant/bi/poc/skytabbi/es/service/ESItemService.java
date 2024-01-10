@@ -14,8 +14,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
-import java.time.LocalDateTime;
-import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -32,6 +30,20 @@ public class ESItemService implements ItemService {
     public List<Item> getAll() {
         List<Item> items = new ArrayList<>();
         itemRepository.findAll().forEach(items::add);
+        return items;
+    }
+
+    @Override
+    public List<Item> findByPlace(String place) {
+        List<Item> items = new ArrayList<>();
+        itemRepository.findByPlace(place).forEach(items::add);
+        return items;
+    }
+
+    @Override
+    public List<Item> findByPlaceAndSaleDatePeriod(String place, long from, long to) {
+        List<Item> items = new ArrayList<>();
+        itemRepository.findByPlaceAndSaleDatePeriod(place, from, to).forEach(items::add);
         return items;
     }
 

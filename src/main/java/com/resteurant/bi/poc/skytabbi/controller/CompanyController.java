@@ -7,7 +7,6 @@ import com.resteurant.bi.poc.skytabbi.model.Item.ItemDto;
 import com.resteurant.bi.poc.skytabbi.model.revenue.PlaceRevenue;
 import com.resteurant.bi.poc.skytabbi.service.ItemService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -24,18 +23,35 @@ public class CompanyController {
 
     @ResponseStatus(HttpStatus.OK)
     @GetMapping
-    public List<Item> getAllSales() {
+    public List<Item> getAllBillItems() {
         return itemService.getAll();
     }
 
+
+    @ResponseStatus(HttpStatus.OK)
+    @GetMapping("/{place}")
+    public List<Item> findBillItemsByPlace(
+            @PathVariable String place
+    ) {
+        return itemService.findByPlace(place);
+    }
+
+    @ResponseStatus(HttpStatus.OK)
+    @GetMapping("/findByPlaceAndSalePeriod/{place}/{from}/{to}")
+    public List<Item> findBillItemsByPlaceAndSaleDatePeriod(
+            @PathVariable String place,
+            @PathVariable long from,
+            @PathVariable long to
+    ) {
+        return itemService.findByPlaceAndSaleDatePeriod(place, from, to);
+    }
 
 
     @ResponseStatus(HttpStatus.OK)
     @GetMapping("/groupByPlaces/{from}/{to}")
     public List<PlaceRevenue> revenueByPlaces(
-            @PathVariable long  from,
-            @PathVariable long  to) {
-
+            @PathVariable long from,
+            @PathVariable long to) {
         return itemService.getRevenuePlaces(from, to);
     }
 

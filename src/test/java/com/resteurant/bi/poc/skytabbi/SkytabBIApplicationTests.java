@@ -99,9 +99,6 @@ class SkytabBIApplicationTests {
         assertEquals(source2.getName(), result.get(1).getName());
         assertEquals(source2.getTotalAmount(), result.get(1).getTotalAmount());
         assertEquals(source2.getTotalAmountGross(), result.get(1).getTotalAmountGross());
-
-
-
     }
 
     @Test
@@ -114,7 +111,6 @@ class SkytabBIApplicationTests {
         List<Item> items = itemService.getAll();
         assertNotNull(items);
         assertEquals(itemsCount, items.size());
-
     }
 
     @Test
@@ -163,6 +159,30 @@ class SkytabBIApplicationTests {
         List<Item> items = itemService.getAll();
         assertNotNull(items);
         assertEquals(2, items.size());
+    }
+    @Test
+    void testFindByPlace() {
+        itemService.create(Item.builder()
+                .place("California")
+                .amount(new BigDecimal(100))
+                .amountGross(new BigDecimal(100))
+                .tax(new BigDecimal(20))
+                .employee("Robert Smith")
+                .saleDate(ItemGenerator.fromStringToDate("2023-12-30T11:55:14"))
+                .build());
+
+        itemService.create(Item.builder()
+                .place("San Diego")
+                .amount(new BigDecimal(150))
+                .amountGross(new BigDecimal(170))
+                .tax(new BigDecimal(20))
+                .employee("Andrew Ford")
+                .saleDate(ItemGenerator.fromStringToDate("2023-11-30T16:55:14"))
+                .build());
+
+        List<Item> items = itemService.findByPlace("California");
+        assertNotNull(items);
+        assertEquals(1, items.size());
     }
 
     @Test

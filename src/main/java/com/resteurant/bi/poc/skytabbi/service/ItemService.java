@@ -1,10 +1,9 @@
 package com.resteurant.bi.poc.skytabbi.service;
 
-import java.time.LocalDateTime;
-import java.util.List;
-
 import com.resteurant.bi.poc.skytabbi.model.Item.Item;
 import com.resteurant.bi.poc.skytabbi.model.revenue.PlaceRevenue;
+
+import java.util.List;
 
 public interface ItemService {
 
@@ -14,6 +13,9 @@ public interface ItemService {
 
     List<Item> getAll();
 
-    Item create(Item item) ;
+    List<Item> findByPlace(String place);
+    List<Item> findByPlaceAndSaleDatePeriod(String place, long from, long to);
+
+    Item create(Item item);
 
 }
