@@ -18,6 +18,7 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.util.Date;
 import java.util.List;
 
@@ -83,10 +84,9 @@ class SkytabBIApplicationTests {
 
 
 
-
         List<PlaceRevenue> result = itemService.getRevenuePlaces(
-                LocalDateTime.parse("2023-11-20T11:55:14"),
-                LocalDateTime.parse("2024-01-30T11:55:14")
+                LocalDateTime.parse("2023-11-20T11:55:14").toInstant(ZoneOffset.UTC).toEpochMilli(),
+                LocalDateTime.parse("2024-01-30T11:55:14").toInstant(ZoneOffset.UTC).toEpochMilli()
         );
 
         assertNotNull(result);

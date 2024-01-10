@@ -10,4 +10,5 @@ public class PlaceRevenue {
     private String name;
     private double totalAmount;
     private double totalAmountGross;
+    private long count;
 }

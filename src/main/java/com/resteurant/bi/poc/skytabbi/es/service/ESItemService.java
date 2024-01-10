@@ -77,10 +77,10 @@ public class ESItemService implements ItemService {
              }
             """;
 
-    public List<PlaceRevenue> getRevenuePlaces(LocalDateTime from, LocalDateTime to) {
+    public List<PlaceRevenue> getRevenuePlaces(long from, long to) {
         List<PlaceRevenue> placeRevenuesResult = new ArrayList<>();
-        String fromEpoch = String.valueOf(from.toInstant(ZoneOffset.UTC).toEpochMilli());
-        String toEpoch = String.valueOf(to.toInstant(ZoneOffset.UTC).toEpochMilli());
+        String fromEpoch = String.valueOf(from);
+        String toEpoch = String.valueOf(to);
 
         String query = QUERY_GET_PLACES_REVENUE.replace(":fromSaleDate", fromEpoch)
                 .replace(":toSaleDate", toEpoch);
@@ -101,6 +101,7 @@ public class ESItemService implements ItemService {
                             .name(place)
                             .totalAmount(totalAmount)
                             .totalAmountGross(totalAmountGross)
+                            .count(entry.getCount())
                             .build()
                     );
                 }

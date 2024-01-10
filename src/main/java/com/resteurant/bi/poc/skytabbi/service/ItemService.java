@@ -9,7 +9,7 @@ import com.resteurant.bi.poc.skytabbi.model.revenue.PlaceRevenue;
 public interface ItemService {
 
 
-    List<PlaceRevenue> getRevenuePlaces(LocalDateTime from, LocalDateTime to);
+    List<PlaceRevenue> getRevenuePlaces(long from, long to);
 
 
     List<Item> getAll();

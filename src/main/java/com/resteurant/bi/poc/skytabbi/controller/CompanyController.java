@@ -17,7 +17,7 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/v1/company")
+@RequestMapping("/company")
 public class CompanyController {
     private final ItemService itemService;
     private final ItemGenerator itemGenerator;
@@ -29,21 +29,15 @@ public class CompanyController {
     }
 
 
-    /*@ResponseStatus(HttpStatus.OK)
-    @GetMapping
-    public List<Item> findBy() {
-        return itemService.getAll();
-    }*/
-
 
     @ResponseStatus(HttpStatus.OK)
     @GetMapping("/groupByPlaces/{from}/{to}")
     public List<PlaceRevenue> revenueByPlaces(
-            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime from,
-            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime to) {
-        return itemService.getRevenuePlaces(from,to);
-    }
+            @PathVariable long  from,
+            @PathVariable long  to) {
 
+        return itemService.getRevenuePlaces(from, to);
+    }
 
     @ResponseStatus(HttpStatus.OK)
     @GetMapping("/generate/{itemsAmount}")
