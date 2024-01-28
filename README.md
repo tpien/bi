@@ -1,4 +1,5 @@
 # bi example
+![demo.gif](demo.gif)
 
 # Tech stack:
 **Backend:**
