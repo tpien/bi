@@ -8,13 +8,14 @@ import java.util.List;
 public interface ItemService {
 
 
-    List<PlaceRevenue> getRevenuePlaces(long from, long to);
+    List<PlaceRevenue> getRevenuePlaces(long fromDate, long toDate);
 
 
     List<Item> getAll();
 
     List<Item> findByPlace(String place);
-    List<Item> findByPlaceAndSaleDatePeriod(String place, long from, long to);
+
+    List<Item> findByPlaceAndSaleDatePeriod(String place, long fromDate, long toDate, int page);
 
     Item create(Item item);
 

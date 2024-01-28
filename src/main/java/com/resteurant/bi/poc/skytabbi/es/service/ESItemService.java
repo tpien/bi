@@ -11,6 +11,7 @@ import io.searchbox.params.Parameters;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -41,9 +42,12 @@ public class ESItemService implements ItemService {
     }
 
     @Override
-    public List<Item> findByPlaceAndSaleDatePeriod(String place, long from, long to) {
+    public List<Item> findByPlaceAndSaleDatePeriod(String place, long fromDate, long toDate, int page) {
         List<Item> items = new ArrayList<>();
-        itemRepository.findByPlaceAndSaleDatePeriod(place, from, to).forEach(items::add);
+        int itemsPerPage = 10;
+
+        PageRequest pageRequest = PageRequest.of(page, itemsPerPage);
+        itemRepository.findByPlaceAndSaleDatePeriod(place, fromDate, toDate, pageRequest).forEach(items::add);
         return items;
     }
 
@@ -89,10 +93,10 @@ public class ESItemService implements ItemService {
              }
             """;
 
-    public List<PlaceRevenue> getRevenuePlaces(long from, long to) {
+    public List<PlaceRevenue> getRevenuePlaces(long fromDate, long toDate) {
         List<PlaceRevenue> placeRevenuesResult = new ArrayList<>();
-        String fromEpoch = String.valueOf(from);
-        String toEpoch = String.valueOf(to);
+        String fromEpoch = String.valueOf(fromDate);
+        String toEpoch = String.valueOf(toDate);
 
         String query = QUERY_GET_PLACES_REVENUE.replace(":fromSaleDate", fromEpoch)
                 .replace(":toSaleDate", toEpoch);

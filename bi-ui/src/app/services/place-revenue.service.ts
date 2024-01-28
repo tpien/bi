@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import {Injectable} from '@angular/core';
 import {Observable} from "rxjs";
 import {ApiService} from "./api.service";
 
@@ -7,14 +7,17 @@ import {ApiService} from "./api.service";
 })
 export class PlaceRevenueService {
 
-  constructor(private apiService: ApiService) { }
+  constructor(private apiService: ApiService) {
+  }
 
-  geBillItemsByPlace(place:string): Observable<[]> {
+  geBillItemsByPlace(place: string): Observable<[]> {
     return this.apiService.getList('company/' + place);
   }
-  geBillItemsByPlaceAndSalePeriod(place:string, from: number, to: number): Observable<[]> {
-    return this.apiService.getList(`company/findByPlaceAndSalePeriod/${place}/${from}/${to} `);
+
+  geBillItemsByPlaceAndSalePeriod(place: string, from: number, to: number, page: number): Observable<[]> {
+    return this.apiService.getList(`company/findByPlaceAndSalePeriod/${place}/${from}/${to}/${page - 1} `);
   }
+
   getPlaceRevenue(from: number, to: number): Observable<[]> {
     return this.apiService.getList(`company/groupByPlaces/${from}/${to} `);
   }

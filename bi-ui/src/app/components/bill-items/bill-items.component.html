@@ -1,33 +1,42 @@
 <div style="width: 70%; margin:auto; margin-top:100px;">
   <a class="" href="/">back</a>
   <br/>
-  <h4>{{place}} </h4>
+  <h4>{{ place }} </h4>
   <div class="row">
-    <div class="col-1">From:</div><div class="col-4">{{searchFromDate | date:'dd.MM.yyyy HH:mm' }}</div>
+    <div class="col-1">From:</div>
+    <div class="col-4">{{ searchFromDate | date:'dd.MM.yyyy HH:mm' }}</div>
   </div>
   <div class="row">
-    <div class="col-1">To:</div><div class="col-4">{{searchToDate | date:'dd.MM.yyyy HH:mm' }}</div>
+    <div class="col-1">To:</div>
+    <div class="col-4">{{ searchToDate | date:'dd.MM.yyyy HH:mm' }}</div>
   </div>
-<table class="table table-sm mt-3">
-  <thead>
-  <tr>
-    <th scope="col">Food</th>
-    <th scope="col">Net price</th>
-    <th scope="col">Gross price</th>
-    <th scope="col">Tax</th>
-    <th scope="col">Seller</th>
-    <th scope="col">Sale date</th>
-  </tr>
-  </thead>
-  <tbody>
-  <tr *ngFor="let item of items">
-    <td>{{ item.name }}</td>
-    <td>{{ item.amount | number:'1.2-2' }} $</td>
-    <td>{{ item.amountGross | number:'1.2-2' }} $</td>
-    <td>{{ item.tax * 100 - 100}}%</td>
-    <td>{{ item.employee}}</td>
-    <td>{{ item.saleDate | date:'dd.MM.yyyy HH:mm' }}</td>
-  </tr>
-  </tbody>
-</table>
+  <table class="table table-sm mt-3" >
+    <thead>
+    <tr>
+      <th scope="col">Food</th>
+      <th scope="col">Net price</th>
+      <th scope="col">Gross price</th>
+      <th scope="col">Tax</th>
+      <th scope="col">Seller</th>
+      <th scope="col">Sale date</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr *ngFor="let item of items">
+      <td>{{ item.name }}</td>
+      <td>{{ item.amount | number:'1.2-2' }} $</td>
+      <td>{{ item.amountGross | number:'1.2-2' }} $</td>
+      <td>{{ item.tax * 100 - 100 }}%</td>
+      <td>{{ item.employee }}</td>
+      <td>{{ item.saleDate | date:'dd.MM.yyyy HH:mm' }}</td>
+    </tr>
+    </tbody>
+  </table>
+    <ul class="pagination justify-content-center">
+      <li class="page-item" *ngIf="this.page > 1"><a class="page-link" (click)="reload(this.page - 1);">Previous</a>
+      </li>
+      <li class="page-item"><a class="page-link">{{ this.page }}</a></li>
+      <li class="page-item" *ngIf="items.length == 10"><a class="page-link" (click)="reload(this.page + 1);">Next</a>
+      </li>
+    </ul>
 </div>

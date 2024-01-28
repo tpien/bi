@@ -5,4 +5,5 @@ import {PlacesComponent} from "./components/places/places.component";
 export const routes: Routes = [
   {path: '', component: PlacesComponent},
   {path: 'billItems/:place/:from/:to', component: BillItemsComponent},
+  {path: 'billItems/:place/:from/:to/:page', component: BillItemsComponent},
 ];

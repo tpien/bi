@@ -37,13 +37,15 @@ public class CompanyController {
     }
 
     @ResponseStatus(HttpStatus.OK)
-    @GetMapping("/findByPlaceAndSalePeriod/{place}/{from}/{to}")
+    @GetMapping("/findByPlaceAndSalePeriod/{place}/{fromDate}/{toDate}/{page}")
     public List<Item> findBillItemsByPlaceAndSaleDatePeriod(
             @PathVariable String place,
-            @PathVariable long from,
-            @PathVariable long to
+            @PathVariable long fromDate,
+            @PathVariable long toDate,
+            @PathVariable int page
+
     ) {
-        return itemService.findByPlaceAndSaleDatePeriod(place, from, to);
+        return itemService.findByPlaceAndSaleDatePeriod(place, fromDate, toDate, page);
     }
 
 
